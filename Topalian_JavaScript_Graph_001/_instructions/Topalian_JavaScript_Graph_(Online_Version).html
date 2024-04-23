@@ -1,0 +1,519 @@
+<!-- Dedicated to God the Father -->
+
+<!-- All Rights Reserved Christopher Andrew Topalian Copyright 2000-2024 -->
+
+<!-- https://github.com/ChristopherTopalian -->
+
+<!-- https://github.com/ChristopherAndrewTopalian -->
+
+<!-- https://github.com/ChristopherTopalian/TopalianGameEngineDataNavigator -->
+
+<!-- Topalian_JavaScript_Graph.html -->
+
+<!-- Version 001 - (2024-04-23) -->
+
+<html>
+<head>
+<title> Topalian JavaScript Graph </title>
+
+<style>
+
+/* Dedicated to God the Father */
+
+/* All Rights Reserved Christopher Andrew Topalian Copyright 2000-2024 */
+
+/* https://github.com/ChristopherTopalian */
+
+/* https://github.com/ChristopherAndrewTopalian */
+
+/* style001.css */
+
+body
+{
+    background-color: rgb(0, 0, 0);
+}
+
+a
+{
+    color: rgb(100, 100, 100);
+    text-decoration: none;
+}
+
+a:hover
+{
+    text-decoration: underline;
+}
+
+#graphTitle
+{
+    font-family: Arial;
+}
+
+#mainDiv
+{
+    position: relative;
+    width: 75%;
+    height: 55%;
+    margin: auto;
+    padding-right: 25px;
+    border: solid 1px rgb(255, 255, 255);
+    border-radius: 8px;
+    background-color: rgb(83, 83, 83);
+    overflow: scroll;
+}
+
+.dataPoint
+{
+    width: 30px;
+    border: solid 1px rgb(255, 255, 255);
+    background-color: rgb(20, 20, 20);
+    font-family: arial;
+    font-size: 17px;
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+    text-align: center;
+}
+
+.temperatureText
+{
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.yearLabel
+{
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: arial;
+    font-size: 14px;
+    color: rgb(255, 255, 255);
+}
+
+#infoContainer
+{
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    width: 30%;
+    height: 50px;
+    margin: auto;
+    margin-top: 10px;
+    border: solid 3px rgb(255, 255, 255);
+    border-radius: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    background-color: rgb(0, 0, 0);
+    font-family: Arial;
+    font-size: 30px;
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    line-height: 43px;
+    overflow: hidden;
+    resize: none;
+}
+
+#titleOfApp
+{
+    font-family: Arial;
+    font-weight: bold;
+    color: rgb(100, 100, 100);
+}
+
+</style>
+
+<script>
+
+// Dedicated to God the Father
+
+// All Rights Reserved Christopher Andrew Topalian Copyright 2000-2024
+
+// https://github.com/ChristopherTopalian
+
+// https://github.com/ChristopherAndrewTopalian
+
+// shortcuts.js
+
+function ge(whichId)
+{
+    let result = document.getElementById(whichId);
+
+    return result;
+}
+
+function ce(whichType)
+{
+    let result = document.createElement(whichType);
+
+    return result;
+}
+
+function ba(whichElement)
+{
+    let result = document.body.append(whichElement);
+
+    return result;
+}
+
+// Dedicated to God the Father
+
+// All Rights Reserved Christopher Andrew Topalian Copyright 2000-2024
+
+// https://github.com/ChristopherTopalian
+
+// https://github.com/ChristopherAndrewTopalian
+
+// worldVariables.js
+
+let online = true;
+
+// Dedicated to God the Father
+
+// All Rights Reserved Christopher Andrew Topalian Copyright 2000-2024
+
+// https://github.com/ChristopherTopalian
+
+// https://github.com/ChristopherAndrewTopalian
+
+// temperature.js
+
+let temperature =
+[
+    20,
+    67,
+    35,
+    85,
+    32,
+    84,
+    26,
+    16,
+    18,
+    43,
+    34,
+    22,
+    83,
+    98,
+    38,
+    48,
+    77,
+    70,
+    40,
+    82,
+    21,
+    50,
+    78,
+    87,
+    45,
+    75,
+    45,
+    48,
+    90,
+    50,
+    70,
+    55,
+    45,
+    35,
+    20,
+    10,
+    98,
+    100,
+    125,
+    100,
+    83,
+    77,
+    70,
+    53,
+    100,
+    97,
+    30,
+    45,
+    16,
+    82
+];
+
+// Dedicated to God the Father
+
+// All Rights Reserved Christopher Andrew Topalian Copyright 2000-2024
+
+// https://github.com/ChristopherTopalian
+
+// https://github.com/ChristopherAndrewTopalian
+
+// makeGraph.js
+
+function makeGraph(whichArray)
+{
+    let xPos = 15;
+    let yPos = 195;
+
+    //-//
+
+    let mainDiv = ce("div");
+    mainDiv.id = 'mainDiv';
+    ba(mainDiv);
+
+    //-//
+
+    for (let x = 0; x < whichArray.length; x++)
+    {
+        let dataPoint = ce("div");
+        dataPoint.id = 'dataPoint' + x;
+        dataPoint.className = "dataPoint";
+        dataPoint.style.position = 'absolute';
+        dataPoint.style.left = xPos + "px";
+        dataPoint.style.top = yPos - whichArray[x] + "px";
+        dataPoint.style.height = whichArray[x] + "px";
+        dataPoint.onmouseover = function()
+        {
+            audioPlay('sfx_warp_001', 1.0);
+
+            ge('temperature' + x).style.color = 'rgb(0, 255, 255)';
+
+            ge('dataPoint' + x).style.borderColor = 'rgb(0, 255, 255)';
+
+            ge('infoContainer').value = whichArray[x];
+
+            ge('infoContainer').style.borderColor = 'rgb(0, 255, 255)';
+
+            ge('infoContainer').style.color = 'rgb(0, 255, 255)';
+        };
+
+        dataPoint.onmouseleave = function()
+        {
+            ge('temperature' + x).style.color = 'rgb(255, 255, 255)';
+
+            ge('dataPoint' + x).style.borderColor = 'rgb(255, 255, 255)';
+
+            ge('infoContainer').style.borderColor = 'rgb(255, 255, 255)';
+
+            ge('infoContainer').style.color = 'rgb(255, 255, 255)';
+        };
+
+        dataPoint.onclick = function()
+        {
+            audioPlay('sfx_blip_001', 1.0);
+
+            ge('temperature' + x).style.color = 'rgb(255, 0, 255)';
+
+            ge('dataPoint' + x).style.borderColor = 'rgb(255, 0, 255)';
+
+            ge('infoContainer').style.borderColor = 'rgb(255, 0, 255)';
+
+            ge('infoContainer').style.color = 'rgb(255, 0, 255)';
+        };
+        mainDiv.append(dataPoint);
+
+        //-//
+
+        let temperatureText = ce("div");
+        temperatureText.id = 'temperature' + x;
+        temperatureText.className = "temperatureText";
+        temperatureText.textContent = whichArray[x];
+        dataPoint.append(temperatureText);
+
+        //-//
+
+        let yearLabel = document.createElement("div");
+        yearLabel.className = "yearLabel";
+        yearLabel.textContent = 1990 + x;
+        dataPoint.append(yearLabel);
+
+        //-//
+
+        xPos += 50;
+    }
+
+    //-//
+
+    let infoContainer = ce('textarea');
+    infoContainer.id = 'infoContainer';
+    mainDiv.insertAdjacentElement("afterend", infoContainer);
+}
+
+// Dedicated to God the Father
+
+// All Rights Reserved Christopher Andrew Topalian Copyright 2000-2024
+
+// https://github.com/ChristopherTopalian
+
+// https://github.com/ChristopherAndrewTopalian
+
+// makeGraphTitle.js
+
+function makeGraphTitle()
+{
+    let graphTitle = ce('div');
+    graphTitle.id = 'graphTitle';
+    graphTitle.innerHTML = 'Graph Title';
+    graphTitle.style.marginBottom = '7px';
+    graphTitle.style.fontSize = '30px';
+    graphTitle.style.fontWeight = 'bold';
+    graphTitle.style.color = 'rgb(255, 255, 255)';
+    graphTitle.style.textAlign = 'center';
+    ge('mainDiv').before(graphTitle);
+}
+
+// Dedicated to God the Father
+
+// All Rights Reserved Christopher Andrew Topalian Copyright 2000-2024
+
+// https://github.com/ChristopherTopalian
+
+// https://github.com/ChristopherAndrewTopalian
+
+// makeInfoDiv.js
+
+function makeInfoDiv()
+{
+    let infoContainer = ce('textarea');
+    infoContainer.id = 'infoContainer';
+    infoContainer.style.position = 'relative';
+    infoContainer.style.margin = 'auto';
+    ge('mainDiv').after(infoContainer);
+}
+
+// Dedicated to God the Father
+
+// All Rights Reserved Christopher Andrew Topalian Copyright 2000-2024
+
+// https://github.com/ChristopherTopalian
+
+// https://github.com/ChristopherAndrewTopalian
+
+// makeTitleOfApp.js
+
+function makeTitleOfApp()
+{
+    // titleContainer
+    let titleContainer = ce('div');
+    titleContainer.style.position = 'absolute';
+    titleContainer.style.right = '10px';
+    titleContainer.style.bottom = '5px';
+    titleContainer.style.zIndex = 1;
+    ba(titleContainer);
+
+    //-//
+
+    // titleOfApp
+    let titleOfApp = ce('div');
+    titleOfApp.id = 'titleOfApp';
+    titleOfApp.innerHTML =
+    `<a href = 'https://github.com/christophertopalian/topalian_javascript_graph/' target = '_blank'> Topalian JavaScript Graph </a>`;
+    titleContainer.append(titleOfApp);
+}
+
+// Dedicated to God the Father
+
+// All Rights Reserved Christopher Andrew Topalian Copyright 2000-2024
+
+// https://github.com/ChristopherTopalian
+
+// https://github.com/ChristopherAndrewTopalian
+
+// audioPlay.js
+
+function audioPlay(whichId, whichVolume)
+{
+    let audio = ge(whichId);
+
+    if (audio)
+    {
+        audio.volume = whichVolume;
+        audio.play();
+    }
+}
+
+// Dedicated to God the Father
+
+// All Rights Reserved Christopher Andrew Topalian Copyright 2000-2024
+
+// https://github.com/ChristopherTopalian
+
+// https://github.com/ChristopherAndrewTopalian
+
+// loadSounds.js
+
+function loadSounds(whichArray)
+{
+    for (let x = 0; x < whichArray.length; x++)
+    {
+        let theSound = ce('audio');
+
+        if (online == false)
+        {
+            theSound.src = whichArray[x].soundFileOffline;
+        }
+        else
+        {
+            theSound.src = whichArray[x].soundFileOnline;
+        }
+
+        theSound.id = whichArray[x].name;
+        theSound.loop = false;
+        theSound.volume = 1.0;
+        ba(theSound);
+    }
+}
+
+// Dedicated to God the Father
+
+// All Rights Reserved Christopher Andrew Topalian Copyright 2000-2024
+
+// https://github.com/ChristopherTopalian
+
+// https://github.com/ChristopherAndrewTopalian
+
+// sounds.js
+
+let sounds =
+[
+    {
+        name: 'sfx_blip_001',
+        soundFileOffline: 'media/sounds/sfx_blip_001.mp4',
+        soundFileOnline: 'https://collegeofscripting.weebly.com/uploads/6/4/4/8/64482293/sfx_blip_001.mp4'
+    },
+
+    {
+        name: 'sfx_warp_001',
+        soundFileOffline: 'media/sounds/sfx_warp_001.mp3',
+        soundFileOnline: 'https://collegeofscripting.weebly.com/uploads/6/4/4/8/64482293/sfx_warp_001.mp3'
+    }
+];
+
+// Dedicated to God the Father
+
+// All Rights Reserved Christopher Andrew Topalian Copyright 2000-2024
+
+// https://github.com/ChristopherTopalian
+
+// https://github.com/ChristopherAndrewTopalian
+
+// whenLoaded.js
+
+function whenLoaded()
+{
+    loadSounds(sounds);
+
+    makeGraph(temperature);
+
+    makeGraphTitle();
+
+    makeTitleOfApp();
+}
+
+</script>
+
+</head>
+
+<body onload = "whenLoaded();">
+
+</body>
+
+</html>
+
